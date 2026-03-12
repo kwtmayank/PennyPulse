@@ -8,6 +8,7 @@ const apiRoutes = require('./routes/apiRoutes');
 const { ApiError } = require('./utils/errors');
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(
   cors({
