@@ -43,11 +43,21 @@ function sanitizeUser(user) {
 }
 
 function cookieOptions() {
+  const isProd = env.nodeEnv === 'production';
   return {
     httpOnly: true,
-    secure: env.nodeEnv === 'production',
-    sameSite: 'lax',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000
+  };
+}
+
+function clearCookieOptions() {
+  const isProd = env.nodeEnv === 'production';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax'
   };
 }
 
@@ -185,7 +195,7 @@ router.post(
 );
 
 router.post('/logout', (_req, res) => {
-  res.clearCookie('auth_token', cookieOptions());
+  res.clearCookie('auth_token', clearCookieOptions());
   res.json({ message: 'Logged out successfully' });
 });
 
@@ -310,7 +320,7 @@ router.post(
     verification.usedAt = new Date();
     await verification.save();
 
-    res.clearCookie('auth_token', cookieOptions());
+    res.clearCookie('auth_token', clearCookieOptions());
     res.json({ message: 'Password reset successful. Please log in again.' });
   })
 );

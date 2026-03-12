@@ -41,14 +41,19 @@ Penny Pulse is a mobile-friendly MERN finance tracker with recurring expense sup
 
 ### Frontend (Vercel)
 
-- Deploy `client/`
-- Set `VITE_API_BASE_URL=https://<your-render-service>.onrender.com`
+- Create a Vercel project with root directory `client/`
+- Set env var:
+  - `VITE_API_BASE_URL=https://<your-backend-project>.vercel.app`
 
-### Backend (Render)
+### Backend (Vercel)
 
-- Deploy `server/`
+- Create another Vercel project with root directory `server/`
+- `server/vercel.json` rewrites all routes to `server/api/index.js`
 - Set env vars from `server/.env.example`
-- Ensure `ALLOWED_ORIGINS` includes your Vercel app domain
+- Ensure:
+  - `NODE_ENV=production`
+  - `APP_URL=https://<your-frontend-project>.vercel.app`
+  - `ALLOWED_ORIGINS=https://<your-frontend-project>.vercel.app`
 
 ### Database (MongoDB Atlas)
 
@@ -83,4 +88,3 @@ Use your DB template securely via env var:
 - `POST /api/recurring/reconcile`
 - `GET /api/dashboard/monthly?month=YYYY-MM`
 - `GET/PATCH /api/settings`
-

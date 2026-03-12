@@ -300,6 +300,7 @@ router.get(
     let income = 0;
     let expense = 0;
     const byCategory = {};
+    const expenseByCategory = {};
 
     for (const txn of txns) {
       if (txn.type === 'income') income += txn.amount;
@@ -307,6 +308,9 @@ router.get(
 
       const label = txn.category?.name || 'Uncategorized';
       byCategory[label] = (byCategory[label] || 0) + txn.amount;
+      if (txn.type === 'expense') {
+        expenseByCategory[label] = (expenseByCategory[label] || 0) + txn.amount;
+      }
     }
 
     res.json({
@@ -317,6 +321,7 @@ router.get(
         balance: income - expense
       },
       categoryBreakdown: byCategory,
+      expenseCategoryBreakdown: expenseByCategory,
       transactionCount: txns.length
     });
   })
