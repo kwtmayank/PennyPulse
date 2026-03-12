@@ -1,4 +1,4 @@
-## PennyPulse Execution Checklist
+## Penny Pulse Execution Checklist
 
 ### 1. Monorepo Foundation
 - [x] Root scripts orchestrate client + server (`dev`, `build`, `test`, `lint`)
@@ -19,7 +19,7 @@
 
 ### 3. Frontend (Client)
 - [x] Router + protected routes + mobile-first shell with bottom nav + quick-add CTA
-- [x] PennyPulse branding in app title and PWA manifest
+- [x] Penny Pulse branding in app title and PWA manifest
 - [x] Auth screens: register, verify email, login, forgot password
 - [x] Reset password flow now includes explicit code verification step
 - [x] Protected screens: dashboard, transactions, recurring rules, categories, settings

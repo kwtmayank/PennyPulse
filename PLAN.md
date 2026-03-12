@@ -1,7 +1,7 @@
-## PennyPulse Implementation Plan (Execution-Ready)
+## Penny Pulse Implementation Plan (Execution-Ready)
 
 ### Summary
-Implement PennyPulse as a monorepo with:
+Implement Penny Pulse as a monorepo with:
 1. `client/` React + TypeScript + Vite + PWA (mobile-first UI)
 2. `server/` Node.js + Express + MongoDB Atlas
 3. Auth system (register/login/logout/email verify/forgot password with code)
@@ -46,7 +46,7 @@ Implement PennyPulse as a monorepo with:
 
 3. **Frontend (`client`)**
 - Setup React router and responsive app shell (mobile-first, bottom nav, quick-add CTA).
-- Brand app as **PennyPulse** (title, manifest, visible branding).
+- Brand app as **Penny Pulse** (title, manifest, visible branding).
 - Auth screens:
   - Register (first name, last name, user ID, email, mobile optional, password).
   - Email verification screen (signup code).

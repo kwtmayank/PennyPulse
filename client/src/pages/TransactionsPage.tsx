@@ -1,5 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { api } from '../api/http';
+import { Modal } from '../components/Modal';
+import { CompactDateSelect } from '../components/CompactDateSelect';
 
 type Category = { _id: string; name: string; kind: 'income' | 'expense' | 'both' };
 type Txn = {
@@ -16,6 +18,7 @@ export function TransactionsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [transactions, setTransactions] = useState<Txn[]>([]);
   const [error, setError] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [form, setForm] = useState({
     type: 'expense',
     amount: '',
@@ -59,6 +62,7 @@ export function TransactionsPage() {
         txnDate: new Date(form.txnDate).toISOString()
       });
       setForm((prev) => ({ ...prev, amount: '', note: '' }));
+      setShowCreateModal(false);
       await load();
     } catch (err) {
       setError((err as Error).message);
@@ -66,30 +70,49 @@ export function TransactionsPage() {
   };
 
   return (
-    <section>
-      <h2>Transactions</h2>
-      <form className="card form-grid" onSubmit={onSubmit}>
-        <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-        <input placeholder="Amount" type="number" min="0" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} required />
-        <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required>
-          <option value="">Select category</option>
-          {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
-        </select>
-        <input type="date" value={form.txnDate} onChange={(e) => setForm({ ...form, txnDate: e.target.value })} required />
-        <input placeholder="Note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
-        <button type="submit">Add transaction</button>
-      </form>
+    <section className="page">
+      <div className="hero-card">
+        <div>
+          <p className="eyebrow">Ledger</p>
+          <h2>Transactions</h2>
+          <p className="muted-copy">Capture income and expenses in one place.</p>
+        </div>
+        <div className="hero-actions">
+          <span className="pill">{transactions.length} entries</span>
+          <button type="button" onClick={() => setShowCreateModal(true)}>
+            Add Transaction
+          </button>
+        </div>
+      </div>
+
+      <Modal title="Add Transaction" open={showCreateModal} onClose={() => setShowCreateModal(false)}>
+        <form className="form-grid" onSubmit={onSubmit}>
+          <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+          <input placeholder="Amount" type="number" min="0" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} required />
+          <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required>
+            <option value="">Select category</option>
+            {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
+          </select>
+          <CompactDateSelect value={form.txnDate} onChange={(next) => setForm({ ...form, txnDate: next })} />
+          <input placeholder="Note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
+          <button type="submit">Save Transaction</button>
+        </form>
+      </Modal>
 
       {error && <p className="error">{error}</p>}
 
       <ul className="list">
         {transactions.map((t) => (
           <li key={t._id}>
-            <strong>{t.type.toUpperCase()}</strong> INR {t.amount.toFixed(2)} - {t.category?.name || 'Uncategorized'} ({new Date(t.txnDate).toLocaleDateString()})
-            {t.source === 'recurring' ? ' [Recurring]' : ''}
+            <div>
+              <span className={`txn-badge ${t.type === 'income' ? 'income' : 'expense'}`}>{t.type.toUpperCase()}</span>
+              <p className="txn-main">INR {t.amount.toFixed(2)} - {t.category?.name || 'Uncategorized'}</p>
+              <p className="txn-meta">{new Date(t.txnDate).toLocaleDateString()}</p>
+            </div>
+            {t.source === 'recurring' ? <span className="pill">Scheduled</span> : null}
           </li>
         ))}
       </ul>

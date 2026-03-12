@@ -2,7 +2,7 @@
   "name": "pennypulse",
   "private": true,
   "version": "1.0.0",
-  "description": "PennyPulse monorepo",
+  "description": "Penny Pulse monorepo",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix server && npm run build --prefix client",

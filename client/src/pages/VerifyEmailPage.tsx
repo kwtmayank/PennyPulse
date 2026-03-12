@@ -1,6 +1,7 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../api/http';
+import { BrandLogo } from '../components/BrandLogo';
 
 export function VerifyEmailPage() {
   const location = useLocation();
@@ -25,6 +26,7 @@ export function VerifyEmailPage() {
 
   return (
     <div className="auth-card">
+      <BrandLogo />
       <h2>Verify your email</h2>
       <p>Code sent to: {email || 'your inbox'}</p>
       <form onSubmit={onSubmit}>

@@ -15,6 +15,13 @@ const splitOrigins = (value) =>
     .map((v) => v.trim())
     .filter(Boolean);
 
+function resolveMongoUri() {
+  const raw = process.env.MONGODB_URI || '';
+  if (!raw) return raw;
+  const dbPassword = process.env.DB_PASSWORD || '';
+  return raw.replace(/\$\{DB_PASSWORD\}/g, encodeURIComponent(dbPassword));
+}
+
 module.exports = {
   port: Number(process.env.PORT || 4000),
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -23,7 +30,7 @@ module.exports = {
   allowedOrigins: splitOrigins(process.env.ALLOWED_ORIGINS || 'http://localhost:5173'),
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  mongodbUri: process.env.MONGODB_URI,
+  mongodbUri: resolveMongoUri(),
   resendApiKey: process.env.RESEND_API_KEY,
-  resendFromEmail: process.env.RESEND_FROM_EMAIL || 'PennyPulse <noreply@example.com>'
+  resendFromEmail: process.env.RESEND_FROM_EMAIL || 'Penny Pulse <noreply@example.com>'
 };

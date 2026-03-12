@@ -1,6 +1,6 @@
 {
-  "name": "PennyPulse",
-  "short_name": "PennyPulse",
+  "name": "Penny Pulse",
+  "short_name": "Penny Pulse",
   "description": "Track finances and recurring expenses",
   "start_url": "/",
   "display": "standalone",

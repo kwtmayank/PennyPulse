@@ -94,15 +94,13 @@ router.post(
       email: email.toLowerCase(),
       mobile: mobile || '',
       passwordHash,
-      emailVerified: false
+      emailVerified: true
     });
 
     await AppSettings.create({ user: user._id, timezone: env.appTz, defaultCurrency: 'INR' });
 
-    await createVerificationCode(user, 'signup_verify');
-
     res.status(201).json({
-      message: 'User registered. Verification code sent to email.',
+      message: 'User registered successfully.',
       user: sanitizeUser(user)
     });
   })
@@ -172,10 +170,6 @@ router.post(
 
     if (!user) {
       throw new ApiError(401, 'Invalid credentials');
-    }
-
-    if (!user.emailVerified) {
-      throw new ApiError(403, 'Please verify your email before logging in');
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);

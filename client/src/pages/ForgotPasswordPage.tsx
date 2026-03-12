@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/http';
+import { BrandLogo } from '../components/BrandLogo';
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -23,6 +24,7 @@ export function ForgotPasswordPage() {
 
   return (
     <div className="auth-card">
+      <BrandLogo />
       <h2>Forgot password</h2>
       <form onSubmit={onSubmit}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />

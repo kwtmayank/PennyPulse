@@ -38,9 +38,15 @@ export function SettingsPage() {
   };
 
   return (
-    <section>
-      <h2>Settings</h2>
-      <form className="card form-grid" onSubmit={onSubmit}>
+    <section className="page">
+      <div className="hero-card">
+        <div>
+          <p className="eyebrow">Preferences</p>
+          <h2>Settings</h2>
+          <p className="muted-copy">Customize your currency and timezone defaults.</p>
+        </div>
+      </div>
+      <form className="card form-grid panel" onSubmit={onSubmit}>
         <label>
           Default currency
           <input value={settings.defaultCurrency} onChange={(e) => setSettings({ ...settings, defaultCurrency: e.target.value.toUpperCase() })} />

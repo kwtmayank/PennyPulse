@@ -5,7 +5,7 @@ const { connectDB } = require('./config/db');
 async function bootstrap() {
   await connectDB();
   app.listen(env.port, () => {
-    console.log(`PennyPulse server listening on port ${env.port}`);
+    console.log(`Penny Pulse server listening on port ${env.port}`);
   });
 }
 

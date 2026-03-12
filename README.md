@@ -1,6 +1,6 @@
-# PennyPulse
+# Penny Pulse
 
-PennyPulse is a mobile-friendly MERN finance tracker with recurring expense support, authentication, and email-based verification/reset flows.
+Penny Pulse is a mobile-friendly MERN finance tracker with recurring expense support, authentication, and email-based verification/reset flows.
 
 ## Monorepo layout
 

@@ -1,6 +1,7 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../api/http';
+import { BrandLogo } from '../components/BrandLogo';
 
 export function ResetPasswordPage() {
   const location = useLocation();
@@ -45,6 +46,7 @@ export function ResetPasswordPage() {
 
   return (
     <div className="auth-card">
+      <BrandLogo />
       <h2>Reset password</h2>
       <form onSubmit={onVerifyCode}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />

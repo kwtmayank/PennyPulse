@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/http';
+import { BrandLogo } from '../components/BrandLogo';
 
 export function RegisterPage() {
   const [form, setForm] = useState({
@@ -19,7 +20,7 @@ export function RegisterPage() {
     setError('');
     try {
       await api.post('/auth/register', form);
-      navigate(`/verify-email?email=${encodeURIComponent(form.email)}`);
+      navigate('/login', { replace: true });
     } catch (err) {
       setError((err as Error).message);
     }
@@ -27,7 +28,8 @@ export function RegisterPage() {
 
   return (
     <div className="auth-card">
-      <h2>Create PennyPulse account</h2>
+      <BrandLogo />
+      <h2>Create Penny Pulse account</h2>
       <form onSubmit={onSubmit}>
         <input placeholder="First name" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required />
         <input placeholder="Last name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required />
