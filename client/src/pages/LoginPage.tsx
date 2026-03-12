@@ -4,19 +4,29 @@ import { api } from '../api/http';
 import { useAuth } from '../context/AuthContext';
 import { BrandLogo } from '../components/BrandLogo';
 
+type LoginUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  userId: string;
+  email: string;
+  mobile: string;
+  emailVerified: boolean;
+};
+
 export function LoginPage() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { refresh } = useAuth();
+  const { setAuthUser } = useAuth();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      await api.post('/auth/login', { identifier, password });
-      await refresh();
+      const data = await api.post<{ user: LoginUser }>('/auth/login', { identifier, password });
+      setAuthUser(data.user);
       navigate('/dashboard', { replace: true });
     } catch (err) {
       setError((err as Error).message);

@@ -15,6 +15,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   refresh: () => Promise<void>;
+  setAuthUser: (user: User | null) => void;
   logout: () => Promise<void>;
 };
 
@@ -44,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refresh();
   }, []);
 
-  const value = useMemo(() => ({ user, loading, refresh, logout }), [user, loading]);
+  const value = useMemo(() => ({ user, loading, refresh, setAuthUser: setUser, logout }), [user, loading]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
