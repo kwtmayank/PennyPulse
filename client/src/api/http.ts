@@ -1,18 +1,49 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   `${window.location.protocol}//${window.location.hostname}:4000`;
+const AUTH_TOKEN_KEY = 'pennypulse_auth_token';
 
 export type ApiError = { message: string };
 
+function getStoredAuthToken() {
+  try {
+    return window.localStorage.getItem(AUTH_TOKEN_KEY) || '';
+  } catch (_err) {
+    return '';
+  }
+}
+
+export function setAuthToken(token: string) {
+  try {
+    window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+  } catch (_err) {
+    // ignore storage errors
+  }
+}
+
+export function clearAuthToken() {
+  try {
+    window.localStorage.removeItem(AUTH_TOKEN_KEY);
+  } catch (_err) {
+    // ignore storage errors
+  }
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const token = getStoredAuthToken();
+  const headers = new Headers(options.headers || undefined);
+  if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+  if (token && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
   let res: Response;
   try {
     res = await fetch(`${API_BASE_URL}${path}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options.headers || {})
-      },
+      headers,
       credentials: 'include'
     });
   } catch (_err) {

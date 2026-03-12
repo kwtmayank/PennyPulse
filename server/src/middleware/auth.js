@@ -3,8 +3,19 @@ const { verifyAuthToken } = require('../services/tokenService');
 const { ApiError } = require('../utils/errors');
 const { asyncHandler } = require('../utils/asyncHandler');
 
+function readToken(req) {
+  const cookieToken = req.cookies?.auth_token;
+  if (cookieToken) return cookieToken;
+
+  const authHeader = req.headers.authorization || '';
+  if (authHeader.startsWith('Bearer ')) {
+    return authHeader.slice('Bearer '.length).trim();
+  }
+  return '';
+}
+
 const requireAuth = asyncHandler(async (req, _res, next) => {
-  const token = req.cookies.auth_token;
+  const token = readToken(req);
   if (!token) {
     throw new ApiError(401, 'Authentication required');
   }
@@ -25,4 +36,4 @@ const requireAuth = asyncHandler(async (req, _res, next) => {
   next();
 });
 
-module.exports = { requireAuth };
+module.exports = { requireAuth, readToken };

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../api/http';
+import { api, setAuthToken } from '../api/http';
 import { useAuth } from '../context/AuthContext';
 import { BrandLogo } from '../components/BrandLogo';
 
@@ -14,6 +14,11 @@ type LoginUser = {
   emailVerified: boolean;
 };
 
+type LoginResponse = {
+  user: LoginUser;
+  token?: string;
+};
+
 export function LoginPage() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +30,10 @@ export function LoginPage() {
     e.preventDefault();
     setError('');
     try {
-      const data = await api.post<{ user: LoginUser }>('/auth/login', { identifier, password });
+      const data = await api.post<LoginResponse>('/auth/login', { identifier, password });
+      if (data.token) {
+        setAuthToken(data.token);
+      }
       setAuthUser(data.user);
       navigate('/dashboard', { replace: true });
     } catch (err) {

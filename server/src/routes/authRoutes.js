@@ -9,6 +9,7 @@ const env = require('../config/env');
 const { ApiError } = require('../utils/errors');
 const { asyncHandler } = require('../utils/asyncHandler');
 const { signAuthToken } = require('../services/tokenService');
+const { readToken } = require('../middleware/auth');
 const { sendEmailCode } = require('../services/emailService');
 const {
   generateCode,
@@ -190,7 +191,7 @@ router.post(
     const token = signAuthToken(user._id.toString());
     res.cookie('auth_token', token, cookieOptions());
 
-    res.json({ user: sanitizeUser(user) });
+    res.json({ user: sanitizeUser(user), token });
   })
 );
 
@@ -202,7 +203,7 @@ router.post('/logout', (_req, res) => {
 router.get(
   '/me',
   asyncHandler(async (req, res) => {
-    const token = req.cookies.auth_token;
+    const token = readToken(req);
     if (!token) {
       return res.status(401).json({ message: 'Unauthorized' });
     }

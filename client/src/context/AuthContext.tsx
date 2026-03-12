@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { api } from '../api/http';
+import { api, clearAuthToken } from '../api/http';
 
 type User = {
   id: string;
@@ -30,6 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await api.get<{ user: User }>('/auth/me');
       setUser(data.user);
     } catch (_err) {
+      clearAuthToken();
       setUser(null);
     } finally {
       setLoading(false);
@@ -38,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     await api.post('/auth/logout');
+    clearAuthToken();
     setUser(null);
   };
 
