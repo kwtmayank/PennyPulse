@@ -125,19 +125,32 @@ export function RecurringRulesPage() {
     }
   };
 
+  const activeRules = rules.filter((rule) => rule.isActive);
+  const totalScheduledAmount = activeRules.reduce((sum, rule) => sum + rule.amount, 0);
+  const formattedScheduledAmount = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2
+  }).format(totalScheduledAmount);
+
   return (
     <section className="page">
-      <div className="hero-card">
-        <div>
-          <p className="eyebrow">Automation</p>
-          <h2>Scheduled Rules</h2>
-          <p className="muted-copy">Automate repeated transactions and never miss entries.</p>
+      <div className="hero-card hero-card-stacked">
+        <div className="hero-metrics">
+          <span className="pill">{activeRules.length} active rules</span>
+          <span className="pill">{formattedScheduledAmount} scheduled total</span>
         </div>
-        <div className="hero-actions">
-          <span className="pill">{rules.length} active rules</span>
-          <button type="button" onClick={() => setShowCreateModal(true)}>
-            Add Schedule
-          </button>
+        <div className="hero-main">
+          <div>
+            <p className="eyebrow">Automation</p>
+            <h2>Scheduled Rules</h2>
+            <p className="muted-copy">Automate repeated transactions and never miss entries.</p>
+          </div>
+          <div className="hero-actions hero-actions-stacked">
+            <button type="button" onClick={() => setShowCreateModal(true)}>
+              Add Schedule
+            </button>
+          </div>
         </div>
       </div>
       <Modal title="Add Scheduled Rule" open={showCreateModal} onClose={() => setShowCreateModal(false)}>

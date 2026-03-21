@@ -114,17 +114,21 @@ export function TransactionsPage() {
 
   return (
     <section className="page">
-      <div className="hero-card">
-        <div>
-          <p className="eyebrow">Ledger</p>
-          <h2>Transactions</h2>
-          <p className="muted-copy">Capture income and expenses in one place.</p>
-        </div>
-        <div className="hero-actions">
+      <div className="hero-card hero-card-stacked">
+        <div className="hero-metrics">
           <span className="pill">{transactions.length} entries</span>
+        </div>
+        <div className="hero-main">
+          <div>
+            <p className="eyebrow">Ledger</p>
+            <h2>Transactions</h2>
+            <p className="muted-copy">Capture income and expenses in one place.</p>
+          </div>
+          <div className="hero-actions hero-actions-stacked">
           <button type="button" onClick={() => setShowCreateModal(true)}>
             Add Transaction
           </button>
+          </div>
         </div>
       </div>
 

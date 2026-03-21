@@ -73,17 +73,21 @@ export function CategoriesPage() {
 
   return (
     <section className="page">
-      <div className="hero-card">
-        <div>
-          <p className="eyebrow">Organize</p>
-          <h2>Categories</h2>
-          <p className="muted-copy">Keep your income and expense buckets tidy.</p>
-        </div>
-        <div className="hero-actions">
+      <div className="hero-card hero-card-stacked">
+        <div className="hero-metrics">
           <span className="pill">{categories.length} total</span>
+        </div>
+        <div className="hero-main">
+          <div>
+            <p className="eyebrow">Organize</p>
+            <h2>Categories</h2>
+            <p className="muted-copy">Keep your income and expense buckets tidy.</p>
+          </div>
+          <div className="hero-actions hero-actions-stacked">
           <button type="button" onClick={() => setShowCreateModal(true)}>
             Add Category
           </button>
+          </div>
         </div>
       </div>
 
