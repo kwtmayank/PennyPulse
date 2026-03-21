@@ -364,6 +364,51 @@ label {
   border-color: #b5e6f7;
 }
 
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.amount-label {
+  margin-right: 0.35rem;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 9px;
+  border: 1px solid #a8c9ef;
+  background: transparent;
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  box-shadow: none;
+  margin-left: 0.3rem;
+  padding: 0;
+}
+
+.icon-btn i {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.icon-btn:hover {
+  background: var(--primary-soft);
+}
+
+.icon-btn-danger {
+  color: #b63f53;
+  border-color: #e8b7c0;
+}
+
+.icon-btn-danger:hover {
+  background: #fdecef;
+}
+
 .summary-pill {
   background: #e9f2ff;
   color: #234065;

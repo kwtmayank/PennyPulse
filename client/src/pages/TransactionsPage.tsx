@@ -10,7 +10,7 @@ type Txn = {
   amount: number;
   txnDate: string;
   note: string;
-  category?: { name: string };
+  category?: { _id: string; name: string };
   source: 'manual' | 'recurring';
 };
 
@@ -19,7 +19,16 @@ export function TransactionsPage() {
   const [transactions, setTransactions] = useState<Txn[]>([]);
   const [error, setError] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingTxnId, setEditingTxnId] = useState('');
   const [form, setForm] = useState({
+    type: 'expense',
+    amount: '',
+    category: '',
+    note: '',
+    txnDate: new Date().toISOString().slice(0, 10)
+  });
+  const [editForm, setEditForm] = useState({
     type: 'expense',
     amount: '',
     category: '',
@@ -69,6 +78,40 @@ export function TransactionsPage() {
     }
   };
 
+  const openEdit = (txn: Txn) => {
+    setEditingTxnId(txn._id);
+    setEditForm({
+      type: txn.type,
+      amount: String(txn.amount),
+      category: txn.category?._id || '',
+      note: txn.note || '',
+      txnDate: new Date(txn.txnDate).toISOString().slice(0, 10)
+    });
+    setShowEditModal(true);
+  };
+
+  const onEditSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!editingTxnId) return;
+    if (!editForm.category) {
+      setError('Category is required.');
+      return;
+    }
+
+    try {
+      await api.patch(`/api/transactions/${editingTxnId}`, {
+        ...editForm,
+        amount: Number(editForm.amount),
+        txnDate: new Date(editForm.txnDate).toISOString()
+      });
+      setShowEditModal(false);
+      setEditingTxnId('');
+      await load();
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
   return (
     <section className="page">
       <div className="hero-card">
@@ -102,6 +145,23 @@ export function TransactionsPage() {
         </form>
       </Modal>
 
+      <Modal title="Edit Transaction" open={showEditModal} onClose={() => setShowEditModal(false)}>
+        <form className="form-grid" onSubmit={onEditSubmit}>
+          <select value={editForm.type} onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}>
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+          <input placeholder="Amount" type="number" min="0" step="0.01" value={editForm.amount} onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })} required />
+          <select value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })} required>
+            <option value="">Select category</option>
+            {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
+          </select>
+          <CompactDateSelect value={editForm.txnDate} onChange={(next) => setEditForm({ ...editForm, txnDate: next })} />
+          <input placeholder="Note" value={editForm.note} onChange={(e) => setEditForm({ ...editForm, note: e.target.value })} />
+          <button type="submit">Update Transaction</button>
+        </form>
+      </Modal>
+
       {error && <p className="error">{error}</p>}
 
       <ul className="list">
@@ -112,7 +172,18 @@ export function TransactionsPage() {
               <p className="txn-main">INR {t.amount.toFixed(2)} - {t.category?.name || 'Uncategorized'}</p>
               <p className="txn-meta">{new Date(t.txnDate).toLocaleDateString()}</p>
             </div>
-            {t.source === 'recurring' ? <span className="pill">Scheduled</span> : null}
+            <div className="item-actions">
+              {t.source === 'recurring' ? <span className="pill">Scheduled</span> : null}
+              <button
+                type="button"
+                className="icon-btn"
+                aria-label={`Edit transaction on ${new Date(t.txnDate).toLocaleDateString()}`}
+                title="Edit transaction"
+                onClick={() => openEdit(t)}
+              >
+                <i className="bi bi-pencil-square" aria-hidden="true" />
+              </button>
+            </div>
           </li>
         ))}
       </ul>

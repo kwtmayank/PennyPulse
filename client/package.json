@@ -11,6 +11,7 @@
     "lint": "echo 'No frontend linter configured yet'"
   },
   "dependencies": {
+    "bootstrap-icons": "^1.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.0",
